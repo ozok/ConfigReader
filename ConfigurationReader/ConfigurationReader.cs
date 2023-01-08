@@ -23,6 +23,7 @@ namespace ConfigurationReader
             _refreshTimerIntervalInMs = refreshTimerIntervalInMs;
 
             _configurations = new List<Configuration>();
+            _configurations = ReadConfig();
         }
 
         private DbContextOptions GetConnectionOptions()
@@ -30,7 +31,7 @@ namespace ConfigurationReader
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), _connectionString).Options;
         }
 
-        private async Task<List<Configuration>> ReadConfig()
+        private async Task<List<Configuration>> ReadConfigAsync()
         {
             try
             {
@@ -47,12 +48,48 @@ namespace ConfigurationReader
             }
         }
 
+        private List<Configuration> ReadConfig()
+        {
+            try
+            {
+                using (ConfigContext configContext = new ConfigContext(GetConnectionOptions()))
+                {
+                    _configurations = configContext.Configurations.Where(q => q.ApplicationName == _applicationName && q.IsActive).ToList();
+                    _lastReadDateTime = DateTime.Now;
+                    return _configurations;
+                }
+            }
+            catch (Exception ex)
+            {
+                return _configurations;
+            }
+        }
+
         public async Task<T> GetValueAsync<T>(string key)
         {
             // Cache expire check
-            if (_lastReadDateTime.AddMilliseconds(_refreshTimerIntervalInMs) > DateTime.Now)
+            if (_lastReadDateTime.AddMilliseconds(_refreshTimerIntervalInMs) < DateTime.Now)
             {
-                _configurations = await ReadConfig();
+                _configurations = await ReadConfigAsync();
+            }
+
+            var record = _configurations.FirstOrDefault(q => q.Name == key);
+            if (record == null)
+            {
+                return default(T);
+            }
+            else
+            {
+                return (T)Convert.ChangeType(record.Value, typeof(T));
+            }
+        }
+
+        public T GetValue<T>(string key)
+        {
+            // Cache expire check
+            if (_lastReadDateTime.AddMilliseconds(_refreshTimerIntervalInMs) < DateTime.Now)
+            {
+                _configurations = ReadConfig();
             }
 
             var record = _configurations.FirstOrDefault(q => q.Name == key);
