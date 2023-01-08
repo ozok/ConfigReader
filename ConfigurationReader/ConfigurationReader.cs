@@ -36,7 +36,7 @@ namespace ConfigurationReader
             {
                 using (ConfigContext configContext = new ConfigContext(GetConnectionOptions()))
                 {
-                    _configurations = await configContext.Configurations.Where(q => q.ApplicationName == _applicationName).ToListAsync();
+                    _configurations = await configContext.Configurations.Where(q => q.ApplicationName == _applicationName && q.IsActive).ToListAsync();
                     _lastReadDateTime = DateTime.Now;
                     return _configurations;
                 }
