@@ -6,7 +6,6 @@ using WebEditor.ViewModels;
 
 namespace WebEditor.Controllers
 {
-    [Route("configurations")]
     public class ConfigurationController : Controller
     {
         private readonly IConfigurationService _configurationService;
@@ -17,7 +16,6 @@ namespace WebEditor.Controllers
         }
 
         [HttpGet]
-        [Route("")]
         public async Task<IActionResult> Index()
         {
             var items = await _configurationService.ListConfigurations();
@@ -26,8 +24,7 @@ namespace WebEditor.Controllers
         }
 
         [HttpGet]
-        [Route("get-edit-item")]
-        public async Task<IActionResult> GetEdit(int configId)
+        public async Task<IActionResult> Edit(int configId)
         {
             var model = await _configurationService.GetConfigurationEditViewModel(configId);
             if (model == null)
@@ -39,7 +36,6 @@ namespace WebEditor.Controllers
         }
 
         [HttpPost]
-        [Route("edit-item")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromForm] ConfigurationEditViewModel model)
         {
@@ -49,7 +45,7 @@ namespace WebEditor.Controllers
                 return NotFound();
             }
 
-            return RedirectToAction("GetEdit", new { configId = config.Id });
+            return RedirectToAction("Edit", new { configId = config.Id });
         }
     }
 }
