@@ -7,11 +7,11 @@ namespace ServiceA.Extensions
 {
     public static class ConfigurationExtension
     {
-        public static IServiceCollection AddConfigurationReader(this IServiceCollection services, IConfigurationSection configurationSection)
+        public static IServiceCollection AddConfigurationReader(this IServiceCollection services, IConfiguration configuration)
         {
-            var configurationConnectionString = configurationSection.GetValue<string>("ConnectionString");
-            var configurationApplicationName = configurationSection.GetValue<string>("ApplicationName");
-            var configurationRefreshTimerIntervalInMs = configurationSection.GetValue<int>("RefreshTimerIntervalInMs");
+            var configurationConnectionString = configuration.GetValue<string>("CONNECTIONSTRING");
+            var configurationApplicationName = configuration.GetValue<string>("APPLICATIONNAME");
+            var configurationRefreshTimerIntervalInMs = configuration.GetValue<int>("REFRESHTIMERINTERVALINMS");
 
             services.AddSingleton(configReader => new ConfigurationReader.ConfigurationReader(configurationApplicationName, configurationConnectionString, configurationRefreshTimerIntervalInMs));
             return services;

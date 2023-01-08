@@ -28,7 +28,7 @@ namespace WebEditor
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<ConfigContext>(options => options.UseSqlServer(Configuration["ConfigurationSettings:ConnectionString"]));
+            services.AddDbContext<ConfigContext>(options => options.UseSqlServer(Configuration.GetValue<string>("CONNECTIONSTRING")));
             services.AddScoped<IConfigurationService, ConfigurationService>();
         }
 

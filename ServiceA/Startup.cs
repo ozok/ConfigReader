@@ -33,7 +33,7 @@ namespace ServiceA
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ServiceA", Version = "v1" });
             });
 
-            services.AddConfigurationReader(Configuration.GetSection("ConfigurationSettings"));
+            services.AddConfigurationReader(Configuration);
         }
 
 

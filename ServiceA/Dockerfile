@@ -3,6 +3,9 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
+ENV ConnectionString "Data Source=host.docker.internal,1433;Initial Catalog=Configurations;Persist Security Info=False;User ID=config;Password=1234;MultipleActiveResultSets=True"
+ENV ApplicationName "SERVICE-A"
+ENV RefreshTimerIntervalInMs 10000
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src

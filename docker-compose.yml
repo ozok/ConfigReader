@@ -6,3 +6,12 @@ services:
     build:
       context: .
       dockerfile: ServiceA/Dockerfile
+    ports:
+       - "6777:80"
+  webeditor:
+    image: ${DOCKER_REGISTRY-}webeditor
+    build:
+      context: .
+      dockerfile: WebEditor/Dockerfile
+    ports:
+       - "6778:80"

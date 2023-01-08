@@ -21,6 +21,10 @@ namespace ServiceA
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureAppConfiguration(configurationBuilder =>
+                {
+                    configurationBuilder.AddJsonFile("appsettings.json");
+                    configurationBuilder.AddEnvironmentVariables();
                 });
     }
 }
