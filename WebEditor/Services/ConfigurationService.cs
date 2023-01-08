@@ -9,7 +9,9 @@ namespace WebEditor.Services
 {
     public interface IConfigurationService
     {
-        Task<IEnumerable<ConfigurationListeItemViewModel>> ListConfigurations();
+        Task<IEnumerable<ConfigurationListItemViewModel>> ListConfigurations();
+        Task<ConfigurationEditViewModel> GetConfigurationEditViewModel(int configId);
+        Task<ConfigurationEditViewModel> EditConfiguration(ConfigurationEditViewModel model);
     }
 
     public class ConfigurationService : IConfigurationService
@@ -21,9 +23,40 @@ namespace WebEditor.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<ConfigurationListeItemViewModel>> ListConfigurations()
+        public async Task<ConfigurationEditViewModel> EditConfiguration(ConfigurationEditViewModel model)
         {
-            var configurations = await _context.Configurations.Select(q => new ConfigurationListeItemViewModel()
+            var config = await _context.Configurations.FirstOrDefaultAsync(q => q.Id == model.Id);
+            if (config == null)
+            {
+                return null;
+            }
+
+            config.ApplicationName = model.ApplicationName;
+            config.IsActive = model.IsActive;   
+            config.Name = model.Name;
+            config.Value = model.Value;
+            
+            await _context.SaveChangesAsync();
+
+            return await GetConfigurationEditViewModel(model.Id);
+        }
+
+        public async Task<ConfigurationEditViewModel> GetConfigurationEditViewModel(int configId)
+        {
+            var model = await _context.Configurations.FirstOrDefaultAsync(q => q.Id == configId);
+            return new ConfigurationEditViewModel()
+            {
+                Id = configId,
+                ApplicationName = model.ApplicationName,
+                IsActive = model.IsActive,
+                Name = model.Name,
+                Value = model.Value
+            };
+        }
+
+        public async Task<IEnumerable<ConfigurationListItemViewModel>> ListConfigurations()
+        {
+            var configurations = await _context.Configurations.Select(q => new ConfigurationListItemViewModel()
             {
                 ApplicationName = q.ApplicationName,
                 Id = q.Id,

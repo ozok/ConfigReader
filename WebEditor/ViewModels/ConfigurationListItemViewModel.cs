@@ -1,6 +1,6 @@
 ﻿namespace WebEditor.ViewModels
 {
-    public class ConfigurationListeItemViewModel
+    public class ConfigurationListItemViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
