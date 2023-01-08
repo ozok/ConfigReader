@@ -15,3 +15,10 @@ services:
       dockerfile: WebEditor/Dockerfile
     ports:
        - "6778:80"
+  serviceb:
+    image: ${DOCKER_REGISTRY-}serviceb
+    build:
+      context: .
+      dockerfile: ServiceB/Dockerfile
+    ports:
+       - "6779:80"
