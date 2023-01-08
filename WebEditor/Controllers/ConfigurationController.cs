@@ -47,5 +47,24 @@ namespace WebEditor.Controllers
 
             return RedirectToAction("Edit", new { configId = config.Id });
         }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View(new ConfigurationAddViewModel() { IsActive = true});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add([FromForm] ConfigurationAddViewModel model)
+        {
+            var config = await _configurationService.AddConfiguration(model);
+            if (config == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

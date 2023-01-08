@@ -2,10 +2,8 @@
 
 namespace WebEditor.ViewModels
 {
-    public class ConfigurationEditViewModel
+    public class ConfigurationAddViewModel
     {
-        [Required]
-        public int Id { get; set; }
 
         [Required]
         [StringLength(128)]

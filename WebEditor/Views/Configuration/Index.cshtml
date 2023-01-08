@@ -5,7 +5,11 @@
 }
 
 <div>
-
+    <div class="mb-4">
+        <a asp-action="Add" asp-controller="Configuration" class="btn btn-success">
+            Add New Configuration
+        </a>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -13,6 +17,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Value</th>
                 <th scope="col">Application</th>
+                <th scope="col">State</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -33,7 +38,10 @@
                         @item.ApplicationName
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-controller="Configuration" asp-route-configId="@item.Id">
+                        @(item.IsActive ? "Active" : "Passive")
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Configuration" asp-route-configId="@item.Id" class="btn btn-primary">
                             Edit
                         </a>
                     </td>
